@@ -49,50 +49,47 @@ export interface ChatProviderProps {
   messages: Message[];
 }
 
+const generalResponses = [
+  'Ok',
+  'Nice',
+  'Sounds good!',
+  'I agree',
+  'Sure',
+  'Absolutely',
+  'No problem',
+  'Got it',
+  'Great',
+  'Fantastic',
+];
+
 export function ChatProvider({
   children,
   contacts: initialContacts = [],
   threads: initialLabels = [],
   messages: initialMessages = [],
 }: ChatProviderProps): React.JSX.Element {
-  const [contacts, setContacts] = React.useState<Contact[]>([]);
-  const [threads, setThreads] = React.useState<Thread[]>([]);
-  const [messages, setMessages] = React.useState<Map<string, Message[]>>(new Map());
+  const [contacts, setContacts] = React.useState<Contact[]>(initialContacts);
+  const [threads, setThreads] = React.useState<Thread[]>(initialLabels);
+  const [messages, setMessages] = React.useState<Map<string, Message[]>>(() =>
+    initialMessages.reduce((acc, curr) => {
+      const byThread = acc.get(curr.threadId) ?? [];
+      byThread.unshift(curr);
+      acc.set(curr.threadId, byThread);
+      return acc;
+    }, new Map<string, Message[]>())
+  );
   const [openDesktopSidebar, setOpenDesktopSidebar] = React.useState<boolean>(true);
   const [openMobileSidebar, setOpenMobileSidebar] = React.useState<boolean>(false);
 
-  React.useEffect((): void => {
-    setContacts(initialContacts);
-  }, [initialContacts]);
-
-  React.useEffect((): void => {
-    setThreads(initialLabels);
-  }, [initialLabels]);
-
-  React.useEffect((): void => {
-    setMessages(
-      initialMessages.reduce((acc, curr) => {
-        const byThread = acc.get(curr.threadId) ?? [];
-        // We unshift the message to ensure the messages are sorted by date
-        byThread.unshift(curr);
-        acc.set(curr.threadId, byThread);
-        return acc;
-      }, new Map<string, Message[]>())
-    );
-  }, [initialMessages]);
-
   const handleCreateThread = React.useCallback(
     (params: CreateThreadParams): string => {
-      // Authenticated user
       const userId = 'USR-000';
 
-      // Check if the thread already exists
       let thread = threads.find((thread) => {
         if (params.type === 'direct') {
           if (thread.type !== 'direct') {
             return false;
           }
-
           return thread.participants
             .filter((participant) => participant.id !== userId)
             .find((participant) => participant.id === params.recipientId);
@@ -105,7 +102,6 @@ export function ChatProvider({
         const recipientIds = thread.participants
           .filter((participant) => participant.id !== userId)
           .map((participant) => participant.id);
-
         if (params.recipientIds.length !== recipientIds.length) {
           return false;
         }
@@ -117,36 +113,27 @@ export function ChatProvider({
         return thread.id;
       }
 
-      // Create a new thread
-
       const participants: Participant[] = [{ id: 'USR-000', name: 'Sofia Rivers', avatar: '/assets/avatar.png' }];
 
       if (params.type === 'direct') {
         const contact = contacts.find((contact) => contact.id === params.recipientId);
-
         if (!contact) {
           throw new Error(`Contact with id "${params.recipientId}" not found`);
         }
-
         participants.push({ id: contact.id, name: contact.name, avatar: contact.avatar });
       } else {
         params.recipientIds.forEach((recipientId) => {
           const contact = contacts.find((contact) => contact.id === recipientId);
-
           if (!contact) {
             throw new Error(`Contact with id "${recipientId}" not found`);
           }
-
           participants.push({ id: contact.id, name: contact.name, avatar: contact.avatar });
         });
       }
 
       thread = { id: `TRD-${Date.now()}`, type: params.type, participants, unreadCount: 0 } satisfies Thread;
 
-      // Add it to the threads
       const updatedThreads = [thread, ...threads];
-
-      // Dispatch threads update
       setThreads(updatedThreads);
 
       return thread.id;
@@ -157,9 +144,7 @@ export function ChatProvider({
   const handleMarkAsRead = React.useCallback(
     (threadId: string) => {
       const thread = threads.find((thread) => thread.id === threadId);
-
       if (!thread) {
-        // Thread might no longer exist
         return;
       }
 
@@ -167,11 +152,9 @@ export function ChatProvider({
         if (threadToUpdate.id !== threadId) {
           return threadToUpdate;
         }
-
         return { ...threadToUpdate, unreadCount: 0 };
       });
 
-      // Dispatch threads update
       setThreads(updatedThreads);
     },
     [threads]
@@ -179,28 +162,49 @@ export function ChatProvider({
 
   const handleCreateMessage = React.useCallback(
     (params: CreateMessageParams): void => {
-      const message = {
+      const newMessage: Message = {
         id: `MSG-${Date.now()}`,
         threadId: params.threadId,
         type: params.type,
         author: { id: 'USR-000', name: 'Sofia Rivers', avatar: '/assets/avatar.png' },
         content: params.content,
         createdAt: new Date(),
-      } satisfies Message;
+      };
 
-      const updatedMessages = new Map<string, Message[]>(messages);
+      setMessages((prevMessages) => {
+        const updatedMessages = new Map(prevMessages);
+        const threadMessages = updatedMessages.get(params.threadId) ?? [];
+        updatedMessages.set(params.threadId, [...threadMessages, newMessage]);
+        return updatedMessages;
+      });
 
-      // Add it to the messages
-      if (!updatedMessages.has(params.threadId)) {
-        updatedMessages.set(params.threadId, [message]);
-      } else {
-        updatedMessages.set(params.threadId, [...updatedMessages.get(params.threadId)!, message]);
+      const thread = threads.find((t) => t.id === params.threadId);
+      if (thread) {
+        const otherParticipants = thread.participants.filter((p) => p.id !== 'USR-000');
+        if (otherParticipants.length > 0) {
+          const responder = otherParticipants[Math.floor(Math.random() * otherParticipants.length)];
+          setTimeout(() => {
+            const randomResponse = generalResponses[Math.floor(Math.random() * generalResponses.length)];
+            const responseMessage: Message = {
+              id: `MSG-${Date.now() + 1}`,
+              threadId: params.threadId,
+              type: 'text',
+              author: { id: responder.id, name: responder.name, avatar: responder.avatar },
+              content: randomResponse,
+              createdAt: new Date(),
+            };
+
+            setMessages((prevMessages) => {
+              const updatedMessages = new Map(prevMessages);
+              const threadMessages = updatedMessages.get(params.threadId) ?? [];
+              updatedMessages.set(params.threadId, [...threadMessages, responseMessage]);
+              return updatedMessages;
+            });
+          }, 1000);
+        }
       }
-
-      // Dispatch messages update
-      setMessages(updatedMessages);
     },
-    [messages]
+    [messages, threads]
   );
 
   return (
