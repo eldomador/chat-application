@@ -19,6 +19,7 @@ import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/di
 import { Phone as PhoneIcon } from '@phosphor-icons/react/dist/ssr/Phone';
 import { Prohibit as ProhibitIcon } from '@phosphor-icons/react/dist/ssr/Prohibit';
 import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
+import { useTranslation } from 'react-i18next';
 
 import type { User } from '@/types/user';
 import { usePopover } from '@/hooks/use-popover';
@@ -56,7 +57,7 @@ export function ThreadToolbar({
   const popover = usePopover<HTMLButtonElement>();
   const recipients = (thread.participants ?? []).filter((participant) => participant.id !== user.id);
   const [showMessageSearch, setMessageSearch] = React.useState<boolean>(false);
-
+  const { t } = useTranslation();
   const handleCloseSearch = () => {
     setMessageSearch(false);
   };
@@ -98,7 +99,7 @@ export function ThreadToolbar({
             </Typography>
             {thread.type === 'direct' ? (
               <Typography color="text.secondary" variant="caption">
-                Recently active
+                {t('RecentlyActive')}
               </Typography>
             ) : null}
           </Box>

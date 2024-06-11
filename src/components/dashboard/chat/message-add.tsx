@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { Camera as CameraIcon } from '@phosphor-icons/react/dist/ssr/Camera';
 import { Paperclip as PaperclipIcon } from '@phosphor-icons/react/dist/ssr/Paperclip';
 import { PaperPlaneTilt as PaperPlaneTiltIcon } from '@phosphor-icons/react/dist/ssr/PaperPlaneTilt';
+import { useTranslation } from 'react-i18next';
 
 import type { User } from '@/types/user';
 
@@ -29,6 +30,7 @@ export interface MessageAddProps {
 export function MessageAdd({ disabled = false, onSend }: MessageAddProps): React.JSX.Element {
   const [content, setContent] = React.useState<string>('');
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+  const { t } = useTranslation();
 
   const handleAttach = React.useCallback(() => {
     fileInputRef.current?.click();
@@ -63,7 +65,7 @@ export function MessageAdd({ disabled = false, onSend }: MessageAddProps): React
         disabled={disabled}
         onChange={handleChange}
         onKeyUp={handleKeyUp}
-        placeholder="Leave a message"
+        placeholder={t('LeaveMessage')}
         sx={{ flex: '1 1 auto' }}
         value={content}
       />

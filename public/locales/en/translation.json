@@ -1,3 +1,10 @@
 {
-  "languageChanged": "Language changed"
+  "languageChanged": "Language changed",
+  "searchContacts": "Search contacts",
+  "searchMessages": "Search messages",
+  "logOut": "Logout",
+  "language": "Language",
+  "Chats": "Chats",
+  "RecentlyActive": "Recently active",
+  "LeaveMessage": "Leave a message"
 }

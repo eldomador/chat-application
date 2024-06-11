@@ -17,6 +17,7 @@ import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
+import { useTranslation } from 'react-i18next';
 
 import { logger } from '@/lib/default-logger';
 
@@ -39,6 +40,7 @@ export function GroupRecipients({
   const [searchFocused, setSearchFocused] = React.useState<boolean>(false);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const [searchResults, setSearchResults] = React.useState<Contact[]>([]);
+  const { t } = useTranslation();
 
   const showSearchResults = searchFocused && Boolean(searchQuery);
   const hasSearchResults = searchResults.length > 0;
@@ -99,7 +101,7 @@ export function GroupRecipients({
           <OutlinedInput
             onChange={handleSearchChange}
             onFocus={handleSearchFocus}
-            placeholder="Search contacts"
+            placeholder={t('searchContacts')}
             ref={searchRef}
             startAdornment={
               <InputAdornment position="start">

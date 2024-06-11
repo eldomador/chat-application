@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { X as XIcon } from '@phosphor-icons/react/dist/ssr/X';
+import { useTranslation } from 'react-i18next';
 
 import { paths } from '@/paths';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -109,6 +110,7 @@ function SidebarContent({
   const [searchFocused, setSearchFocused] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const [searchResults, setSearchResults] = React.useState<Contact[]>([]);
+  const { t } = useTranslation();
 
   const handleSearchChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -166,7 +168,7 @@ function SidebarContent({
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Stack direction="row" spacing={2} sx={{ alignItems: 'center', flex: '0 0 auto', p: 2 }}>
         <Typography sx={{ flex: '1 1 auto' }} variant="h5">
-          Chats
+          {t('Chats')}
         </Typography>
         <Button
           component={RouterLink}

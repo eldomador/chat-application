@@ -1,3 +1,11 @@
 {
-  "languageChanged": "Sprache geändert"
+  "languageChanged": "Sprache geändert",
+  "searchContacts": "Kontakte suchen",
+  "searchMessages": "Nachrichten suchen",
+  "logOut": "Abmelden",
+  "language": "Sprache",
+  "Chats": "Chats",
+  "RecentlyActive": "Kürzlich aktiv",
+  "LeaveMessage": "Nachricht hinterlassen"
 }
+

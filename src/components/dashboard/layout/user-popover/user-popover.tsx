@@ -54,7 +54,7 @@ function LanguageSelect(): React.JSX.Element {
 
   return (
     <FormControl variant="outlined" fullWidth>
-      <InputLabel id="language-select-label">{t('Language')}</InputLabel>
+      <InputLabel id="language-select-label">{t('language')}</InputLabel>
       <Select labelId="language-select-label" value={language} onChange={handleChange} label="Language">
         {(Object.keys(languageOptions) as Language[]).map((lang) => (
           <MenuItem key={lang} value={lang}>

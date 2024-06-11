@@ -13,6 +13,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
+import { useTranslation } from 'react-i18next';
 
 import { Tip } from '@/components/core/tip';
 
@@ -48,7 +49,7 @@ export const DirectSearch = React.forwardRef<HTMLDivElement, DirectSearchProps>(
     },
     [onSelect]
   );
-
+  const { t } = useTranslation();
   const showTip = isFocused && !query;
   const showResults = isFocused && query;
   const hasResults = results.length > 0;
@@ -59,7 +60,7 @@ export const DirectSearch = React.forwardRef<HTMLDivElement, DirectSearchProps>(
         <OutlinedInput
           onChange={onChange}
           onFocus={onFocus}
-          placeholder="Search contacts"
+          placeholder={t('searchContacts')}
           startAdornment={
             <InputAdornment position="start">
               <MagnifyingGlassIcon fontSize="var(--icon-fontSize-md)" />
