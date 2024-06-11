@@ -3,7 +3,6 @@ import type { RouteObject } from 'react-router-dom';
 
 import { Layout as ChatLayout } from '@/components/dashboard/chat/layout';
 import { Layout as DashboardLayout } from '@/components/dashboard/layout/layout';
-import { Layout as SettingsLayout } from '@/components/dashboard/settings/layout';
 
 export const route: RouteObject = {
   path: '',
@@ -46,52 +45,6 @@ export const route: RouteObject = {
           path: ':threadType/:threadId',
           lazy: async () => {
             const { Page } = await import('@/pages/dashboard/chat/thread');
-            return { Component: Page };
-          },
-        },
-      ],
-    },
-
-    {
-      path: 'settings',
-      element: (
-        <SettingsLayout>
-          <Outlet />
-        </SettingsLayout>
-      ),
-      children: [
-        {
-          path: 'account',
-          lazy: async () => {
-            const { Page } = await import('@/pages/dashboard/settings/account');
-            return { Component: Page };
-          },
-        },
-        {
-          path: 'billing',
-          lazy: async () => {
-            const { Page } = await import('@/pages/dashboard/settings/billing');
-            return { Component: Page };
-          },
-        },
-        {
-          path: 'notifications',
-          lazy: async () => {
-            const { Page } = await import('@/pages/dashboard/settings/notifications');
-            return { Component: Page };
-          },
-        },
-        {
-          path: 'security',
-          lazy: async () => {
-            const { Page } = await import('@/pages/dashboard/settings/security');
-            return { Component: Page };
-          },
-        },
-        {
-          path: 'team',
-          lazy: async () => {
-            const { Page } = await import('@/pages/dashboard/settings/team');
             return { Component: Page };
           },
         },

@@ -17,13 +17,6 @@ export const paths = {
     },
   },
   authorizedPath: {
-    settings: {
-      account: '/settings/account',
-      billing: '/settings/billing',
-      notifications: '/settings/notifications',
-      security: '/settings/security',
-      team: '/settings/team',
-    },
     blank: '/blank',
 
     chat: {
