@@ -11,10 +11,6 @@ import { MessageBox } from './message-box';
 import { ThreadToolbar } from './thread-toolbar';
 import type { Message, MessageType, Thread, ThreadType } from './types';
 
-/**
- * This method is used to get the thread from the context based on the thread type and ID.
- * The thread should be loaded from the API in the page, but for the sake of simplicity we are just using the context.
- */
 function useThread(threadId: string): Thread | undefined {
   const { threads } = React.useContext(ChatContext);
 
@@ -41,6 +37,8 @@ export function ThreadView({ threadId }: ThreadViewProps): React.JSX.Element | n
 
   const messagesRef = React.useRef<HTMLDivElement>(null);
 
+  const [searchQuery, setSearchQuery] = React.useState('');
+
   const handleThreadChange = React.useCallback(() => {
     markAsRead(threadId);
   }, [threadId, markAsRead]);
@@ -63,6 +61,10 @@ export function ThreadView({ threadId }: ThreadViewProps): React.JSX.Element | n
     }
   }, [messages]);
 
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+  };
+
   if (!thread) {
     return (
       <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center' }}>
@@ -75,10 +77,10 @@ export function ThreadView({ threadId }: ThreadViewProps): React.JSX.Element | n
 
   return (
     <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column', minHeight: 0 }}>
-      <ThreadToolbar thread={thread} />
+      <ThreadToolbar messages={messages} thread={thread} onSearchChange={handleSearchChange} />
       <Stack ref={messagesRef} spacing={2} sx={{ flex: '1 1 auto', overflowY: 'auto', p: 3 }}>
         {messages.map((message) => (
-          <MessageBox key={message.id} message={message} />
+          <MessageBox key={message.id} message={message} searchQuery={searchQuery} />
         ))}
       </Stack>
       <MessageAdd onSend={handleSendMessage} />

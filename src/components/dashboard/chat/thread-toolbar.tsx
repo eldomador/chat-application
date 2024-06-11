@@ -7,23 +7,21 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField'; // Dodane
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Archive as ArchiveIcon } from '@phosphor-icons/react/dist/ssr/Archive';
 import { Bell as BellIcon } from '@phosphor-icons/react/dist/ssr/Bell';
 import { Camera as CameraIcon } from '@phosphor-icons/react/dist/ssr/Camera';
 import { DotsThree as DotsThreeIcon } from '@phosphor-icons/react/dist/ssr/DotsThree';
-import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 import { Phone as PhoneIcon } from '@phosphor-icons/react/dist/ssr/Phone';
 import { Prohibit as ProhibitIcon } from '@phosphor-icons/react/dist/ssr/Prohibit';
 import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
 
 import type { User } from '@/types/user';
-import { useDialog } from '@/hooks/use-dialog';
 import { usePopover } from '@/hooks/use-popover';
 
-import { SearchDialog } from '../layout/search-dialog';
-import type { Thread } from './types';
+import type { Message, Thread } from './types';
 
 const user = {
   id: 'USR-000',
@@ -34,27 +32,19 @@ const user = {
 
 export interface ThreadToolbarProps {
   thread: Thread;
+  messages: Message[];
+  onSearchChange: (query: string) => void;
 }
 
-function SearchButton(): React.JSX.Element {
-  const dialog = useDialog();
-
-  return (
-    <React.Fragment>
-      <Tooltip title="Search">
-        <IconButton onClick={dialog.handleOpen}>
-          <MagnifyingGlassIcon />
-        </IconButton>
-      </Tooltip>
-      <SearchDialog onClose={dialog.handleClose} open={dialog.open} />
-    </React.Fragment>
-  );
-}
-
-export function ThreadToolbar({ thread }: ThreadToolbarProps): React.JSX.Element {
+export function ThreadToolbar({ thread, messages, onSearchChange }: ThreadToolbarProps): React.JSX.Element {
   const popover = usePopover<HTMLButtonElement>();
 
   const recipients = (thread.participants ?? []).filter((participant) => participant.id !== user.id);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    onSearchChange(query);
+  };
 
   return (
     <React.Fragment>
@@ -99,7 +89,7 @@ export function ThreadToolbar({ thread }: ThreadToolbarProps): React.JSX.Element
           </Box>
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          <SearchButton />
+          <TextField placeholder="Search messages" variant="outlined" size="small" onChange={handleSearchChange} />
           <IconButton>
             <PhoneIcon />
           </IconButton>

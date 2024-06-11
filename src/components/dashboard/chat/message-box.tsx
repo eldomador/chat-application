@@ -21,10 +21,25 @@ const user = {
 
 export interface MessageBoxProps {
   message: Message;
+  searchQuery?: string;
 }
 
-export function MessageBox({ message }: MessageBoxProps): React.JSX.Element {
+export function MessageBox({ message, searchQuery = '' }: MessageBoxProps): React.JSX.Element {
   const position = message.author.id === user.id ? 'right' : 'left';
+
+  const highlightText = (text: string, highlight: string) => {
+    if (!highlight) return text;
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+    return parts.map((part, index) =>
+      part.toLowerCase() === highlight.toLowerCase() ? (
+        <span key={index} style={{ backgroundColor: 'yellow' }}>
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
 
   return (
     <Box sx={{ alignItems: position === 'right' ? 'flex-end' : 'flex-start', flex: '0 0 auto', display: 'flex' }}>
@@ -67,7 +82,7 @@ export function MessageBox({ message }: MessageBoxProps): React.JSX.Element {
               ) : null}
               {message.type === 'text' ? (
                 <Typography color="inherit" variant="body1">
-                  {message.content}
+                  {highlightText(message.content, searchQuery)}
                 </Typography>
               ) : null}
             </Stack>
