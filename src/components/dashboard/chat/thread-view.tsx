@@ -44,6 +44,7 @@ export function ThreadView({ threadId }: ThreadViewProps): React.JSX.Element | n
   const handleThreadChange = React.useCallback(() => {
     markAsRead(threadId);
     setSearchQuery('');
+    setSearchResults([]);
   }, [threadId, markAsRead]);
 
   React.useEffect(() => {

@@ -143,7 +143,6 @@ export function ChatView({ children }: ChatViewProps): React.JSX.Element {
             spacing={2}
             sx={{ alignItems: 'center', flex: '1 1 auto', justifyContent: 'flex-end' }}
           >
-            {/* <LanguageSwitch /> */}
             <UserButton />
           </Stack>
         </Box>
