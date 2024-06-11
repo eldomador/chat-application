@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -32,7 +34,7 @@ export function MessageBox({ message, searchQuery = '' }: MessageBoxProps): Reac
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return parts.map((part, index) =>
       part.toLowerCase() === highlight.toLowerCase() ? (
-        <span key={index} style={{ backgroundColor: 'yellow' }}>
+        <span key={index} style={{ color: 'black', backgroundColor: 'yellow' }}>
           {part}
         </span>
       ) : (
@@ -42,7 +44,10 @@ export function MessageBox({ message, searchQuery = '' }: MessageBoxProps): Reac
   };
 
   return (
-    <Box sx={{ alignItems: position === 'right' ? 'flex-end' : 'flex-start', flex: '0 0 auto', display: 'flex' }}>
+    <Box
+      id={message.id}
+      sx={{ alignItems: position === 'right' ? 'flex-end' : 'flex-start', flex: '0 0 auto', display: 'flex' }}
+    >
       <Stack
         direction={position === 'right' ? 'row-reverse' : 'row'}
         spacing={2}

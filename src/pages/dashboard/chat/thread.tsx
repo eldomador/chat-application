@@ -7,7 +7,7 @@ import { config } from '@/config';
 import { ThreadView } from '@/components/dashboard/chat/thread-view';
 import type { ThreadType } from '@/components/dashboard/chat/types';
 
-const metadata = { title: `Thread | Chat | Dashboard | ${config.site.name}` } satisfies Metadata;
+const metadata = { title: config.site.name } satisfies Metadata;
 
 export function Page(): React.JSX.Element {
   const { threadId, threadType } = useParams() as { threadId: string; threadType: ThreadType };

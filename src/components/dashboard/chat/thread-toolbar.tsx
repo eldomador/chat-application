@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -7,13 +9,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField'; // Dodane
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Archive as ArchiveIcon } from '@phosphor-icons/react/dist/ssr/Archive';
 import { Bell as BellIcon } from '@phosphor-icons/react/dist/ssr/Bell';
 import { Camera as CameraIcon } from '@phosphor-icons/react/dist/ssr/Camera';
 import { DotsThree as DotsThreeIcon } from '@phosphor-icons/react/dist/ssr/DotsThree';
+import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 import { Phone as PhoneIcon } from '@phosphor-icons/react/dist/ssr/Phone';
 import { Prohibit as ProhibitIcon } from '@phosphor-icons/react/dist/ssr/Prohibit';
 import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
@@ -21,6 +23,7 @@ import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
 import type { User } from '@/types/user';
 import { usePopover } from '@/hooks/use-popover';
 
+import { MessageSearch } from './message-search';
 import type { Message, Thread } from './types';
 
 const user = {
@@ -33,18 +36,26 @@ const user = {
 export interface ThreadToolbarProps {
   thread: Thread;
   messages: Message[];
+  searchQuery: string;
+  searchResults: Message[];
+  currentResultIndex: number;
   onSearchChange: (query: string) => void;
+  onNextResult: () => void;
+  onPreviousResult: () => void;
 }
 
-export function ThreadToolbar({ thread, messages, onSearchChange }: ThreadToolbarProps): React.JSX.Element {
+export function ThreadToolbar({
+  thread,
+  searchQuery,
+  searchResults,
+  currentResultIndex,
+  onSearchChange,
+  onNextResult,
+  onPreviousResult,
+}: ThreadToolbarProps): React.JSX.Element {
   const popover = usePopover<HTMLButtonElement>();
-
   const recipients = (thread.participants ?? []).filter((participant) => participant.id !== user.id);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    onSearchChange(query);
-  };
+  const [showMessageSearch, setMessageSearch] = React.useState<boolean>(false);
 
   return (
     <React.Fragment>
@@ -89,7 +100,20 @@ export function ThreadToolbar({ thread, messages, onSearchChange }: ThreadToolba
           </Box>
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          <TextField placeholder="Search messages" variant="outlined" size="small" onChange={handleSearchChange} />
+          {showMessageSearch ? (
+            <MessageSearch
+              searchQuery={searchQuery}
+              searchResults={searchResults}
+              currentResultIndex={currentResultIndex}
+              onSearchChange={onSearchChange}
+              onNextResult={onNextResult}
+              onPreviousResult={onPreviousResult}
+            />
+          ) : (
+            <IconButton onClick={() => setMessageSearch(true)}>
+              <MagnifyingGlassIcon />
+            </IconButton>
+          )}
           <IconButton>
             <PhoneIcon />
           </IconButton>
