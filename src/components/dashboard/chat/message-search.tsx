@@ -32,6 +32,7 @@ export function MessageSearch({
     const query = event.target.value;
     onSearchChange(query);
   };
+  const searchResultsExist = searchResults.length > 0;
 
   return (
     <React.Fragment>
@@ -41,7 +42,7 @@ export function MessageSearch({
         value={searchQuery}
         onChange={handleSearchChange}
         endAdornment={
-          searchResults.length > 0 && (
+          searchResultsExist && (
             <Typography variant="body2">
               {currentResultIndex + 1}/{searchResults.length}
             </Typography>
@@ -51,10 +52,10 @@ export function MessageSearch({
       />
 
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <IconButton size="small" onClick={onPreviousResult}>
+        <IconButton disabled={!searchResultsExist} size="small" onClick={onPreviousResult}>
           <CaretLeft size={32} />
         </IconButton>
-        <IconButton size="small" onClick={onNextResult}>
+        <IconButton disabled={!searchResultsExist} size="small" onClick={onNextResult}>
           <CaretRight size={32} />
         </IconButton>
         <IconButton size="small" onClick={onCloseSearch}>

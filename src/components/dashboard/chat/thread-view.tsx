@@ -43,11 +43,11 @@ export function ThreadView({ threadId }: ThreadViewProps): React.JSX.Element | n
 
   const handleThreadChange = React.useCallback(() => {
     markAsRead(threadId);
+    setSearchQuery('');
   }, [threadId, markAsRead]);
 
   React.useEffect(() => {
     handleThreadChange();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Prevent infinite loop
   }, [threadId]);
 
   const handleSendMessage = React.useCallback(
