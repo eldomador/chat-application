@@ -57,6 +57,10 @@ export function ThreadToolbar({
   const recipients = (thread.participants ?? []).filter((participant) => participant.id !== user.id);
   const [showMessageSearch, setMessageSearch] = React.useState<boolean>(false);
 
+  const handleCloseSearch = () => {
+    setMessageSearch(false);
+  };
+
   return (
     <React.Fragment>
       <Stack
@@ -108,23 +112,26 @@ export function ThreadToolbar({
               onSearchChange={onSearchChange}
               onNextResult={onNextResult}
               onPreviousResult={onPreviousResult}
+              onCloseSearch={handleCloseSearch}
             />
           ) : (
-            <IconButton onClick={() => setMessageSearch(true)}>
-              <MagnifyingGlassIcon />
-            </IconButton>
+            <>
+              <IconButton onClick={() => setMessageSearch(true)}>
+                <MagnifyingGlassIcon />
+              </IconButton>
+              <IconButton>
+                <PhoneIcon />
+              </IconButton>
+              <IconButton>
+                <CameraIcon />
+              </IconButton>
+              <Tooltip title="More options">
+                <IconButton onClick={popover.handleOpen} ref={popover.anchorRef}>
+                  <DotsThreeIcon weight="bold" />
+                </IconButton>
+              </Tooltip>
+            </>
           )}
-          <IconButton>
-            <PhoneIcon />
-          </IconButton>
-          <IconButton>
-            <CameraIcon />
-          </IconButton>
-          <Tooltip title="More options">
-            <IconButton onClick={popover.handleOpen} ref={popover.anchorRef}>
-              <DotsThreeIcon weight="bold" />
-            </IconButton>
-          </Tooltip>
         </Stack>
       </Stack>
       <Menu anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open}>

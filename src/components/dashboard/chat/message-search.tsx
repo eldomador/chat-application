@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { InputAdornment, OutlinedInput } from '@mui/material';
+import { OutlinedInput } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
+import { CaretLeft } from '@phosphor-icons/react/dist/ssr/CaretLeft';
+import { CaretRight } from '@phosphor-icons/react/dist/ssr/CaretRight';
+import { X as XIcon } from '@phosphor-icons/react/dist/ssr/X';
 
 import { Message } from './types';
 
@@ -14,6 +16,7 @@ export interface MessageSearchProps {
   onSearchChange: (query: string) => void;
   onNextResult: () => void;
   onPreviousResult: () => void;
+  onCloseSearch: () => void;
 }
 
 export function MessageSearch({
@@ -23,6 +26,7 @@ export function MessageSearch({
   onSearchChange,
   onNextResult,
   onPreviousResult,
+  onCloseSearch,
 }: MessageSearchProps): React.JSX.Element {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
@@ -36,25 +40,27 @@ export function MessageSearch({
         size="small"
         value={searchQuery}
         onChange={handleSearchChange}
-        startAdornment={
-          <InputAdornment position="start">
-            <MagnifyingGlassIcon fontSize="var(--icon-fontSize-md)" />
-          </InputAdornment>
+        endAdornment={
+          searchResults.length > 0 && (
+            <Typography variant="body2">
+              {currentResultIndex + 1}/{searchResults.length}
+            </Typography>
+          )
         }
+        sx={{ width: 200 }}
       />
-      {searchResults.length > 0 && (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body2">
-            {currentResultIndex + 1}/{searchResults.length}
-          </Typography>
-          <IconButton onClick={onPreviousResult}>
-            <Typography>{'<'}</Typography>
-          </IconButton>
-          <IconButton onClick={onNextResult}>
-            <Typography>{'>'}</Typography>
-          </IconButton>
-        </Box>
-      )}
+
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <IconButton size="small" onClick={onPreviousResult}>
+          <CaretLeft size={32} />
+        </IconButton>
+        <IconButton size="small" onClick={onNextResult}>
+          <CaretRight size={32} />
+        </IconButton>
+        <IconButton size="small" onClick={onCloseSearch}>
+          <XIcon size={32} />
+        </IconButton>
+      </Box>
     </React.Fragment>
   );
 }
